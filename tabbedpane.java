@@ -38,6 +38,7 @@ class tabbedpane extends JFrame
 		ippn.setBounds(460,110,180,30);
 		IN.setBounds(300,170,120,30);
 //		IN.setForeground(Color.white);
+
 		ipIN.setBounds(460,170,180,30);
 		OUT.setBounds(300,230,120,30);
 //		OUT.setForeground(Color.white);
