@@ -3,7 +3,7 @@ import java.awt.event.*;
 class Homepage extends Frame implements ActionListener {
     TextField pid,pname,qua,price,ptype,search;
     Label id,name,q,pri,type;
-    Button ab, db, ub, sb, searchB,addB;
+    Button ab, db, ub, sb,hm,searchB,addB;
     TextArea result;
 
     Homepage() {
@@ -20,10 +20,15 @@ class Homepage extends Frame implements ActionListener {
         searchB = new Button("Search");
         searchB.setBounds(410, 50, 80, 30);
         add(searchB);
+        result = new TextArea(25, 10);
+        result.setBounds(250, 200, 530, 350);
+        add(result);  result.setVisible(false);
         ab = new Button("ADD");
         db = new Button("DELETE");
         ub = new Button("UPDATE");
         sb = new Button("SHOW");
+        hm = new Button("HOME");
+        hm.setBounds(50, 200, 100, 30);
         ab.setBounds(50, 250, 100, 30);
         db.setBounds(50, 300, 100, 30);
         ub.setBounds(50, 350, 100, 30);
@@ -32,10 +37,12 @@ class Homepage extends Frame implements ActionListener {
         add(db);
         add(ub);
         add(sb);
+        add(hm);
         ab.addActionListener(this);
         db.addActionListener(this);
         ub.addActionListener(this);
         sb.addActionListener(this);
+        hm.addActionListener(this);
 
         id=new Label("Product ID :");  pid=new TextField(5);
         name=new Label("Product Name :");  pname=new TextField(20);
@@ -52,12 +59,12 @@ class Homepage extends Frame implements ActionListener {
         type.setBounds(250, 350, 150,30);   ptype.setBounds(410, 350, 150,30);
 
         
-        add(id);    add(pid);
-        add(name);  add(pname);
-        add(q);     add(qua);
-        add(pri);   add(price);
-        add(type);  add(ptype);
-        add(addB);
+        add(id);    add(pid);           id.setVisible(false);    pid.setVisible(false);
+        add(name);  add(pname);         name.setVisible(false);    pname.setVisible(false);
+        add(q);     add(qua);       q.setVisible(false);    qua.setVisible(false);
+        add(pri);   add(price);    pri.setVisible(false);    price.setVisible(false);
+        add(type);  add(ptype);    type.setVisible(false);    ptype.setVisible(false);
+        add(addB);          addB.setVisible(false);
 
         addB.addActionListener(this);
 
@@ -67,12 +74,37 @@ class Homepage extends Frame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sb) {
-            result = new TextArea(25, 10);
-            result.setBounds(250, 200, 530, 350);
-            add(result);
+             search.setVisible(true);
+            searchB.setVisible(true);
+            result.setVisible(true);
+                   id.setVisible(false);    pid.setVisible(false);
+                   name.setVisible(false);    pname.setVisible(false);
+                   q.setVisible(false);    qua.setVisible(false);    
+                  pri.setVisible(false);    price.setVisible(false);       
+                  type.setVisible(false);    ptype.setVisible(false);
+                  addB.setVisible(false);
         }
         else if(e.getSource()==ab){
-            
+            search.setVisible(false);
+            searchB.setVisible(false);
+            result.setVisible(false);
+                   id.setVisible(true);    pid.setVisible(true);
+                   name.setVisible(true);    pname.setVisible(true);
+                   q.setVisible(true);    qua.setVisible(true);    
+                  pri.setVisible(true);    price.setVisible(true);       
+                  type.setVisible(true);    ptype.setVisible(true);
+                addB.setVisible(true);
+        }
+         else if(e.getSource()==hm){
+            search.setVisible(true);
+            searchB.setVisible(true);
+            result.setVisible(false);
+                   id.setVisible(false);    pid.setVisible(false);
+                   name.setVisible(false);    pname.setVisible(false);
+                   q.setVisible(false);    qua.setVisible(false);    
+                  pri.setVisible(false);    price.setVisible(false);       
+                  type.setVisible(false);    ptype.setVisible(false);
+                  addB.setVisible(false);
         }
     }
 
