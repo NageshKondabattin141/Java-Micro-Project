@@ -1,10 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+
 class Homepage extends Frame implements ActionListener {
-    TextField pid,pname,qua,price,ptype,search;
-    Label id,name,q,pri,type;
-    Button ab, db, ub, sb,hm,searchB,addB,delB,updB;
+    TextField pid, pname, qua, price, ptype, search;
+    Label id, name, q, pri, type;
+    Button ab, db, ub, sb, hm, searchB, addB, delB, updB;
     TextArea result;
 
     Homepage() {
@@ -23,7 +24,8 @@ class Homepage extends Frame implements ActionListener {
         add(searchB);
         result = new TextArea(25, 10);
         result.setBounds(250, 200, 530, 350);
-        add(result);  result.setVisible(false);
+        add(result);
+        result.setVisible(false);
         ab = new Button("ADD");
         db = new Button("DELETE");
         ub = new Button("UPDATE");
@@ -45,104 +47,167 @@ class Homepage extends Frame implements ActionListener {
         sb.addActionListener(this);
         hm.addActionListener(this);
 
-        id=new Label("Product ID :");  pid=new TextField(5);
-        name=new Label("Product Name :");  pname=new TextField(20);
-        q=new Label("Quantity :");  qua=new TextField(20);
-        pri=new Label("Price :");  price=new TextField(20);
-        type=new Label("Product Type :");  ptype=new TextField(5);
+        id = new Label("Product ID :");
+        pid = new TextField(5);
+        name = new Label("Product Name :");
+        pname = new TextField(20);
+        q = new Label("Quantity :");
+        qua = new TextField(20);
+        pri = new Label("Price :");
+        price = new TextField(20);
+        type = new Label("Product Type :");
+        ptype = new TextField(5);
 
-        addB=new Button("ADD Product");  addB.setBounds(400, 400, 150, 40);
-        delB=new Button("DELETE Product");  delB.setBounds(400, 400, 150, 40);
-        updB=new Button("UPDATE Product");  updB.setBounds(400, 400, 150, 40);
+        addB = new Button("ADD Product");
+        addB.setBounds(400, 400, 150, 40);
+        delB = new Button("DELETE Product");
+        delB.setBounds(400, 400, 150, 40);
+        updB = new Button("UPDATE Product");
+        updB.setBounds(400, 400, 150, 40);
 
-        id.setBounds(250, 150, 150,30);  pid.setBounds(410, 150, 250,30);
-        name.setBounds(250, 200, 150,30);  pname.setBounds(410, 200, 150,30);
-        q.setBounds(250, 250, 150,30);   qua.setBounds(410, 250, 150,30);
-        pri.setBounds(250, 300, 150,30);   price.setBounds(410, 300, 150,30);
-        type.setBounds(250, 350, 150,30);   ptype.setBounds(410, 350, 150,30);
+        id.setBounds(250, 150, 150, 30);
+        pid.setBounds(410, 150, 250, 30);
+        name.setBounds(250, 200, 150, 30);
+        pname.setBounds(410, 200, 150, 30);
+        q.setBounds(250, 250, 150, 30);
+        qua.setBounds(410, 250, 150, 30);
+        pri.setBounds(250, 300, 150, 30);
+        price.setBounds(410, 300, 150, 30);
+        type.setBounds(250, 350, 150, 30);
+        ptype.setBounds(410, 350, 150, 30);
 
-        
-        add(id);    add(pid);           id.setVisible(false);    pid.setVisible(false);
-        add(name);  add(pname);         name.setVisible(false);    pname.setVisible(false);
-        add(q);     add(qua);       q.setVisible(false);    qua.setVisible(false);
-        add(pri);   add(price);    pri.setVisible(false);    price.setVisible(false);
-        add(type);  add(ptype);    type.setVisible(false);    ptype.setVisible(false);
-        add(addB);          addB.setVisible(false);
-        add(delB);          delB.setVisible(false);
-        add(updB);          updB.setVisible(false);
+        add(id);
+        add(pid);
+        id.setVisible(false);
+        pid.setVisible(false);
+        add(name);
+        add(pname);
+        name.setVisible(false);
+        pname.setVisible(false);
+        add(q);
+        add(qua);
+        q.setVisible(false);
+        qua.setVisible(false);
+        add(pri);
+        add(price);
+        pri.setVisible(false);
+        price.setVisible(false);
+        add(type);
+        add(ptype);
+        type.setVisible(false);
+        ptype.setVisible(false);
+        add(addB);
+        addB.setVisible(false);
+        add(delB);
+        delB.setVisible(false);
+        add(updB);
+        updB.setVisible(false);
 
         addB.addActionListener(this);
-       // setBackground(Color.magenta);
+        // setBackground(Color.magenta);
         setVisible(true);
 
+         try{
+        Class.forName("oracle.jdbc.driver.OracleDriver");
+        System.out.println("Driver Loaded");
+        Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");
+        System.out.println("Connected");
+        con.close();
+        PreparedStatement psa=con.prepareStatement("insert into Medical values(?,?,?,?,?)");
+        PreparedStatement psd=con.prepareStatement("update Medical set qty=? where name='?'");
+        PreparedStatement psu=con.prepareStatement("delete from Medical where id=?");
+    }catch(Exception e){
+        System.out.println("Error Occurs"+e);
+    }
     }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sb) {
-             search.setVisible(true);
+            search.setVisible(true);
             searchB.setVisible(true);
             result.setVisible(true);
-                   id.setVisible(false);    pid.setVisible(false);
-                   name.setVisible(false);    pname.setVisible(false);
-                   q.setVisible(false);    qua.setVisible(false);    
-                  pri.setVisible(false);    price.setVisible(false);       
-                  type.setVisible(false);    ptype.setVisible(false);
-                  addB.setVisible(false);       delB.setVisible(false);
-        }
-        else if(e.getSource()==ab){
+            id.setVisible(false);
+            pid.setVisible(false);
+            name.setVisible(false);
+            pname.setVisible(false);
+            q.setVisible(false);
+            qua.setVisible(false);
+            pri.setVisible(false);
+            price.setVisible(false);
+            type.setVisible(false);
+            ptype.setVisible(false);
+            addB.setVisible(false);
+            delB.setVisible(false);
+        } else if (e.getSource() == ab) {
             search.setVisible(false);
             searchB.setVisible(false);
             result.setVisible(false);
-                   id.setVisible(true);    pid.setVisible(true);
-                   name.setVisible(true);    pname.setVisible(true);
-                   q.setVisible(true);    qua.setVisible(true);    
-                  pri.setVisible(true);    price.setVisible(true);       
-                  type.setVisible(true);    ptype.setVisible(true);
-                addB.setVisible(true);      delB.setVisible(false);
-        }
-         else if(e.getSource()==hm){
+            id.setVisible(true);
+            pid.setVisible(true);
+            name.setVisible(true);
+            pname.setVisible(true);
+            q.setVisible(true);
+            qua.setVisible(true);
+            pri.setVisible(true);
+            price.setVisible(true);
+            type.setVisible(true);
+            ptype.setVisible(true);
+            addB.setVisible(true);
+            delB.setVisible(false);
+        } else if (e.getSource() == hm) {
             search.setVisible(true);
             searchB.setVisible(true);
             result.setVisible(false);
-                   id.setVisible(false);    pid.setVisible(false);
-                   name.setVisible(false);    pname.setVisible(false);
-                   q.setVisible(false);    qua.setVisible(false);    
-                  pri.setVisible(false);    price.setVisible(false);       
-                  type.setVisible(false);    ptype.setVisible(false);
-                  addB.setVisible(false);  delB.setVisible(false);
-        }
-        else if(e.getSource()==db){
-            search.setVisible(false);    
-            searchB.setVisible(false);   
+            id.setVisible(false);
+            pid.setVisible(false);
+            name.setVisible(false);
+            pname.setVisible(false);
+            q.setVisible(false);
+            qua.setVisible(false);
+            pri.setVisible(false);
+            price.setVisible(false);
+            type.setVisible(false);
+            ptype.setVisible(false);
+            addB.setVisible(false);
+            delB.setVisible(false);
+        } else if (e.getSource() == db) {
+            search.setVisible(false);
+            searchB.setVisible(false);
             result.setVisible(false);
-                   id.setVisible(true);    pid.setVisible(true);  
-                   name.setVisible(false);    pname.setVisible(false);
-                   q.setVisible(false);    qua.setVisible(false);    
-                  pri.setVisible(false);    price.setVisible(false);
-                  type.setVisible(false);    ptype.setVisible(false);
-                  addB.setVisible(false);
-                  delB.setVisible(true);
-        }
-        else if(e.getSource()==ub){
-            search.setVisible(false);    
-            searchB.setVisible(false);   
+            id.setVisible(true);
+            pid.setVisible(true);
+            name.setVisible(false);
+            pname.setVisible(false);
+            q.setVisible(false);
+            qua.setVisible(false);
+            pri.setVisible(false);
+            price.setVisible(false);
+            type.setVisible(false);
+            ptype.setVisible(false);
+            addB.setVisible(false);
+            delB.setVisible(true);
+        } else if (e.getSource() == ub) {
+            search.setVisible(false);
+            searchB.setVisible(false);
             result.setVisible(false);
-                   id.setVisible(true);    pid.setVisible(true);  
-                   name.setVisible(false);    pname.setVisible(false);
-                   q.setVisible(true);    qua.setVisible(true);
-                  pri.setVisible(false);    price.setVisible(false);
-                  type.setVisible(false);    ptype.setVisible(false);
-                  addB.setVisible(false);
-                  delB.setVisible(false);
-                  updB.setVisible(true);
+            id.setVisible(true);
+            pid.setVisible(true);
+            name.setVisible(false);
+            pname.setVisible(false);
+            q.setVisible(true);
+            qua.setVisible(true);
+            pri.setVisible(false);
+            price.setVisible(false);
+            type.setVisible(false);
+            ptype.setVisible(false);
+            addB.setVisible(false);
+            delB.setVisible(false);
+            updB.setVisible(true);
         }
     }
 
     public static void main(String[] args) throws Exception {
         new Homepage();
-        Class.forName("oracle.jdbc.driver.OracleDriver");
-        System.out.println("Driver Loaded");
-        Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","system","manager");
-      System.out.println("Connected");
+ //String sql="create table JavaMp3(id number(5),name varchar(20),qty number(4),price number(4,2),type varchar(20))";       
     }
 }
