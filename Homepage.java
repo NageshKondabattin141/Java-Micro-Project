@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 class Homepage extends Frame implements ActionListener {
     TextField pid,pname,qua,price,ptype,search;
     Label id,name,q,pri,type;
@@ -137,7 +138,11 @@ class Homepage extends Frame implements ActionListener {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         new Homepage();
+        Class.forName("oracle.jdbc.driver.OracleDriver");
+        System.out.println("Driver Loaded");
+        Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","system","manager");
+      System.out.println("Connected");
     }
 }
