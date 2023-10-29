@@ -11,6 +11,7 @@ class Homepage extends Frame implements ActionListener {
     static PreparedStatement psd;
     static PreparedStatement psu;
     static Connection con;
+
     Homepage() {
         setSize(800, 800);
         setLayout(null);
@@ -112,23 +113,23 @@ class Homepage extends Frame implements ActionListener {
         // setBackground(Color.magenta);
         setVisible(true);
 
-         try{
-        Class.forName("oracle.jdbc.driver.OracleDriver");
-        System.out.println("Driver Loaded");
-        Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");
-        System.out.println("Connected");
-      psa=con.prepareStatement("insert into Medical values(?,?,?,?,?)");
-      psu=con.prepareStatement("update Medical set qty=? where id=?");
-      psd=con.prepareStatement("delete from Medical where id=?");
-    }catch(Exception e){
-        System.out.println("Error Occurs"+e);
-    }
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            System.out.println("Driver Loaded");
+            Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");
+            System.out.println("Connected");
+            psa = con.prepareStatement("insert into Medical values(?,?,?,?,?)");
+            psu = con.prepareStatement("update Medical set qty=? where id=?");
+            psd = con.prepareStatement("delete from Medical where id=?");
+        } catch (Exception e) {
+            System.out.println("Error Occurs" + e);
+        }
     }
 
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == sb) {
             search.setVisible(true);
-            searchB.setVisible(true); 
+            searchB.setVisible(true);
             result.setVisible(true);
             id.setVisible(false);
             pid.setVisible(false);
@@ -143,36 +144,37 @@ class Homepage extends Frame implements ActionListener {
             addB.setVisible(false);
             delB.setVisible(false);
             try {
-                Statement st=con.createStatement();
-                ResultSet res=st.executeQuery("select * from Medical");
-                while (res.next()){
-                    result.setText(res.getInt(1)+"  "+res.getString(2)+"  "+res.getInt(3)+"  "+res.getInt(4)+"  "+res.getString(5));
+                Statement st = con.createStatement();
+                ResultSet res = st.executeQuery("select * from Medical");
+                while (res.next()) {
+                    result.setText(res.getInt(1) + "  " + res.getString(2) + "  " + res.getInt(3) + "  " + res.getInt(4)
+                            + "  " + res.getString(5));
                 }
             } catch (Exception e) {
                 System.out.println(e);
             }
         } else if (ae.getSource() == ab) {
-           try {
-             search.setVisible(false);      
-            searchB.setVisible(false);    
-            result.setVisible(false);     
-            id.setVisible(true);           
-            pid.setVisible(true);        
-            name.setVisible(true);       
-                                           
-            pname.setVisible(true);
-            q.setVisible(true);
-            qua.setVisible(true);
-            pri.setVisible(true);
-            price.setVisible(true);
-            type.setVisible(true);
-            ptype.setVisible(true);
-            addB.setVisible(true);
-            delB.setVisible(false);
-            
-           } catch (Exception e) {
-           System.out.println("Error occures  : "+e);
-           }
+            try {
+                search.setVisible(false);
+                searchB.setVisible(false);
+                result.setVisible(false);
+                id.setVisible(true);
+                pid.setVisible(true);
+                name.setVisible(true);
+
+                pname.setVisible(true);
+                q.setVisible(true);
+                qua.setVisible(true);
+                pri.setVisible(true);
+                price.setVisible(true);
+                type.setVisible(true);
+                ptype.setVisible(true);
+                addB.setVisible(true);
+                delB.setVisible(false);
+
+            } catch (Exception e) {
+                System.out.println("Error occures  : " + e);
+            }
         } else if (ae.getSource() == hm) {
             search.setVisible(true);
             searchB.setVisible(true);
@@ -223,14 +225,13 @@ class Homepage extends Frame implements ActionListener {
             addB.setVisible(false);
             delB.setVisible(false);
             updB.setVisible(true);
-           
-        }
-        else if(ae.getSource()==addB){
-            int id_no=Integer.parseInt(pid.getText());
-            String p_name=pname.getText();
-            int quant=Integer.parseInt(qua.getText());
-            int amt=Integer.parseInt(price.getText());
-            String p_type=ptype.getText();
+
+        } else if (ae.getSource() == addB) {
+            int id_no = Integer.parseInt(pid.getText());
+            String p_name = pname.getText();
+            int quant = Integer.parseInt(qua.getText());
+            int amt = Integer.parseInt(price.getText());
+            String p_type = ptype.getText();
             try {
                 psa.setInt(1, id_no);
                 psa.setString(2, p_name);
@@ -239,32 +240,33 @@ class Homepage extends Frame implements ActionListener {
                 psa.setString(5, p_type);
                 psa.executeUpdate();
             } catch (Exception e) {
-               System.out.println(e);
+                System.out.println(e);
             }
 
-        } else if(ae.getSource()==updB){
-             try {
-                int amt=Integer.parseInt(qua.getText());
-                psu.setInt(1,amt);
-                int id_no=Integer.parseInt(pid.getText());
-                psu.setInt(2,id_no);
+        } else if (ae.getSource() == updB) {
+            try {
+                int amt = Integer.parseInt(qua.getText());
+                psu.setInt(1, amt);
+                int id_no = Integer.parseInt(pid.getText());
+                psu.setInt(2, id_no);
                 psu.executeUpdate();
             } catch (Exception e) {
-               System.out.println(e);
+                System.out.println(e);
             }
-        } else if(ae.getSource()==delB){
+        } else if (ae.getSource() == delB) {
             try {
-                int id_no=Integer.parseInt(pid.getText());
-                psd.setInt(1,id_no);
+                int id_no = Integer.parseInt(pid.getText());
+                psd.setInt(1, id_no);
                 psd.executeUpdate();
             } catch (Exception e) {
-               System.out.println(e);
+                System.out.println(e);
             }
         }
     }
 
     public static void main(String[] args) throws Exception {
         new Homepage();
- //String sql="create table JavaMp4(id number(4),name varchar(20),qty number(4),price number(4,2),type varchar(20))";       
+        // String sql="create table JavaMp4(id number(4),name varchar(20),qty
+        // number(4),price number(4,2),type varchar(20))";
     }
 }
