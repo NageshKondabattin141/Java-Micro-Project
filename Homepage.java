@@ -71,7 +71,7 @@ class Homepage extends Frame implements ActionListener {
         add(updB);          updB.setVisible(false);
 
         addB.addActionListener(this);
-        setBackground(Color.cyan);
+       // setBackground(Color.magenta);
         setVisible(true);
 
     }
@@ -111,16 +111,29 @@ class Homepage extends Frame implements ActionListener {
                   addB.setVisible(false);  delB.setVisible(false);
         }
         else if(e.getSource()==db){
-            search.setVisible(true);    
-            searchB.setVisible(true);   
+            search.setVisible(false);    
+            searchB.setVisible(false);   
             result.setVisible(false);
-                   id.setVisible(true);    pid.setVisible(true);  pid.setText("");
+                   id.setVisible(true);    pid.setVisible(true);  
                    name.setVisible(false);    pname.setVisible(false);
                    q.setVisible(false);    qua.setVisible(false);    
                   pri.setVisible(false);    price.setVisible(false);
                   type.setVisible(false);    ptype.setVisible(false);
                   addB.setVisible(false);
                   delB.setVisible(true);
+        }
+        else if(e.getSource()==ub){
+            search.setVisible(false);    
+            searchB.setVisible(false);   
+            result.setVisible(false);
+                   id.setVisible(true);    pid.setVisible(true);  
+                   name.setVisible(false);    pname.setVisible(false);
+                   q.setVisible(true);    qua.setVisible(true);
+                  pri.setVisible(false);    price.setVisible(false);
+                  type.setVisible(false);    ptype.setVisible(false);
+                  addB.setVisible(false);
+                  delB.setVisible(false);
+                  updB.setVisible(true);
         }
     }
 
