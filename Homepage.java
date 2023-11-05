@@ -6,7 +6,7 @@ import javax.swing.table.*;
 
 class Homepage extends JFrame implements ActionListener, FocusListener {
     JTextField pid, pname, qua, price, ptype, search;
-    JLabel id, name, q, pri, type, ans, msg;
+    JLabel id, name, q, pri, type, ans;
     JButton ab, db, ub, sb, hm, searchB, addB, delB, updB;
     JTable database;
    // String colheads[] = { "PID", "PNAME", "Quantity", "PRICE", "PTYPE" };
@@ -80,8 +80,6 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         delB.setBounds(400, 400, 150, 40);
         updB = new JButton("UPDATE Product");
         updB.setBounds(400, 400, 150, 40);
-        msg = new JLabel("");
-        msg.setBounds(380, 520, 200, 30);
 
         id.setBounds(250, 150, 150, 30);
         pid.setBounds(410, 150, 250, 30);
@@ -120,9 +118,6 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         delB.setVisible(false);
         c.add(updB);
         updB.setVisible(false);
-        c.add(msg);
-        msg.setVisible(false);
-
         addB.addActionListener(this);
         updB.addActionListener(this);
         delB.addActionListener(this);
@@ -281,23 +276,22 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
             addB.setVisible(false);
             delB.setVisible(false);
             updB.setVisible(false);
-            msg.setVisible(true);
             database.setVisible(true);
             js.setVisible(true);
              try {
              Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");  
              Statement st = con.createStatement();
              res = st.executeQuery("select * from Medical");
-             database.removeAll();
+             dtm.setRowCount(0);
              while(res.next()){
-                
                String name=res.getString(1);
                int idp=res.getInt(2);
                String tp=res.getString(3);
                int qty=res.getInt(4);
                int pricep=res.getInt(5);
-                dtm.addRow(new Object[]{name,idp,tp,qty,pricep});
-               
+                dtm.addRow(new Object[]{idp,name,tp,qty,pricep});
+            
+
              }
              JOptionPane.showMessageDialog(null,"Data Retrived Successfully");
              } catch (Exception e) {
@@ -321,7 +315,6 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
                 delB.setVisible(false);
                 updB.setVisible(false);
                 database.setVisible(false);
-                msg.setText(" ");
                 js.setVisible(false);
             } catch (Exception e) {
                 System.out.println("Error occures  : " + e);
@@ -344,7 +337,6 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
             updB.setVisible(false);
             database.setVisible(false);
             js.setVisible(false);
-            msg.setText(" ");
         } else if (ae.getSource() == db) {
             search.setVisible(false);
             searchB.setVisible(false);
@@ -361,7 +353,6 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
             addB.setVisible(false);
             delB.setVisible(true);
             updB.setVisible(false);
-            msg.setText(" ");
             database.setVisible(false);
             js.setVisible(false);
         } else if (ae.getSource() == ub) {
@@ -381,7 +372,6 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
             delB.setVisible(false);
             updB.setVisible(true);
             database.setVisible(false);
-            msg.setText(" ");
             js.setVisible(false);
 
         } else if (ae.getSource() == addB) {
@@ -397,7 +387,6 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
                 psa.setInt(5, amt);
                 psa.setString(3, p_type);
                 psa.executeUpdate();
-                msg.setVisible(true);
                 JOptionPane.showMessageDialog(null,"Product Added Successfully");
             } catch (Exception e) {
                 System.out.println(e);
@@ -409,8 +398,8 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
                 int id_no = Integer.parseInt(pid.getText());
                 psu.setInt(2, id_no);
                 psu.executeUpdate();
-                msg.setVisible(true);
-                msg.setText("Row Updated Successfully");
+                JOptionPane.showMessageDialog(null,"Product Updated Successfully");
+
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -419,8 +408,7 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
                 int id_no = Integer.parseInt(pid.getText());
                 psd.setInt(1, id_no);
                 psd.executeUpdate();
-                msg.setVisible(true);
-                msg.setText("Row Deleted Successfully");
+                JOptionPane.showMessageDialog(null,"Product Deleted Successfully");
             } catch (Exception e) {
                 System.out.println(e);
             }
