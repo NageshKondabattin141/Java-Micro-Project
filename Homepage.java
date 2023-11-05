@@ -1,73 +1,87 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
-class Homepage extends Frame implements ActionListener {
-    TextField pid, pname, qua, price, ptype, search;
-    Label id, name, q, pri, type;
-    Button ab, db, ub, sb, hm, searchB, addB, delB, updB;
-    TextArea result;
+class Homepage extends JFrame implements ActionListener, FocusListener {
+    JTextField pid, pname, qua, price, ptype, search;
+    JLabel id, name, q, pri, type, ans, msg;
+    JButton ab, db, ub, sb, hm, searchB, addB, delB, updB;
+    JTable database;
+   // String colheads[] = { "PID", "PNAME", "Quantity", "PRICE", "PTYPE" };
+   // Object row[][] = { { 01, "Dolo", 200, 05, "Tablet" }, { 02, "Dry_Cough", 250, 150, "Syrup" } };
+    Container c;
     static PreparedStatement psa;
     static PreparedStatement psd;
     static PreparedStatement psu;
+    static PreparedStatement pss;
     static Connection con;
+     ResultSet res, res1;
+    static DefaultTableModel dtm;
+    JScrollPane js;
 
     Homepage() {
         setSize(800, 800);
+        setLocation(500,180);
         setLayout(null);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-        search = new TextField();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        c = getContentPane();
+        search = new JTextField();
         search.setBounds(150, 50, 250, 30);
-        add(search);
-        searchB = new Button("Search");
+        c.add(search);
+        searchB = new JButton("Search");
         searchB.setBounds(410, 50, 80, 30);
-        add(searchB);
-        result = new TextArea(25, 10);
-        result.setBounds(250, 200, 530, 350);
-        add(result);
-        result.setVisible(false);
-        ab = new Button("ADD");
-        db = new Button("DELETE");
-        ub = new Button("UPDATE");
-        sb = new Button("SHOW");
-        hm = new Button("HOME");
+        c.add(searchB);
+        ans = new JLabel("");
+        ans.setBounds(240, 300, 200, 30);
+        c.add(ans);
+        ab = new JButton("ADD");
+        db = new JButton("DELETE");
+        ub = new JButton("UPDATE");
+        sb = new JButton("SHOW");
+        hm = new JButton("HOME");
         hm.setBounds(50, 200, 100, 30);
         ab.setBounds(50, 250, 100, 30);
         db.setBounds(50, 300, 100, 30);
         ub.setBounds(50, 350, 100, 30);
         sb.setBounds(50, 400, 100, 30);
-        add(ab);
-        add(db);
-        add(ub);
-        add(sb);
-        add(hm);
+        c.add(ab);
+        c.add(db);
+        c.add(ub);
+        c.add(sb);
+        c.add(hm);
         ab.addActionListener(this);
         db.addActionListener(this);
         ub.addActionListener(this);
         sb.addActionListener(this);
         hm.addActionListener(this);
 
-        id = new Label("Product ID :");
-        pid = new TextField(5);
-        name = new Label("Product Name :");
-        pname = new TextField(20);
-        q = new Label("Quantity :");
-        qua = new TextField(20);
-        pri = new Label("Price :");
-        price = new TextField(20);
-        type = new Label("Product Type :");
-        ptype = new TextField(5);
+        ab.addFocusListener(this);
+        db.addFocusListener(this);
+        ub.addFocusListener(this);
+        sb.addFocusListener(this);
+        hm.addFocusListener(this);
 
-        addB = new Button("ADD Product");
+        id = new JLabel("Product ID :");
+        pid = new JTextField(5);
+        name = new JLabel("Product Name :");
+        pname = new JTextField(40);
+        q = new JLabel("Quantity :");
+        qua = new JTextField(40);
+        pri = new JLabel("Price :");
+        price = new JTextField(40);
+        type = new JLabel("Product Type :");
+        ptype = new JTextField(40);
+
+        addB = new JButton("ADD Product");
         addB.setBounds(400, 400, 150, 40);
-        delB = new Button("DELETE Product");
+        delB = new JButton("DELETE Product");
         delB.setBounds(400, 400, 150, 40);
-        updB = new Button("UPDATE Product");
+        updB = new JButton("UPDATE Product");
         updB.setBounds(400, 400, 150, 40);
+        msg = new JLabel("");
+        msg.setBounds(380, 520, 200, 30);
 
         id.setBounds(250, 150, 150, 30);
         pid.setBounds(410, 150, 250, 30);
@@ -80,36 +94,84 @@ class Homepage extends Frame implements ActionListener {
         type.setBounds(250, 350, 150, 30);
         ptype.setBounds(410, 350, 150, 30);
 
-        add(id);
-        add(pid);
+        c.add(id);
+        c.add(pid);
         id.setVisible(false);
         pid.setVisible(false);
-        add(name);
-        add(pname);
+        c.add(name);
+        c.add(pname);
         name.setVisible(false);
         pname.setVisible(false);
-        add(q);
-        add(qua);
+        c.add(q);
+        c.add(qua);
         q.setVisible(false);
         qua.setVisible(false);
-        add(pri);
-        add(price);
+        c.add(pri);
+        c.add(price);
         pri.setVisible(false);
         price.setVisible(false);
-        add(type);
-        add(ptype);
+        c.add(type);
+        c.add(ptype);
         type.setVisible(false);
         ptype.setVisible(false);
-        add(addB);
+        c.add(addB);
         addB.setVisible(false);
-        add(delB);
+        c.add(delB);
         delB.setVisible(false);
-        add(updB);
+        c.add(updB);
         updB.setVisible(false);
+        c.add(msg);
+        msg.setVisible(false);
 
         addB.addActionListener(this);
         updB.addActionListener(this);
         delB.addActionListener(this);
+        searchB.addActionListener(this);
+
+        addB.addFocusListener(this);
+        updB.addFocusListener(this);
+        delB.addFocusListener(this);
+        searchB.addFocusListener(this);
+        pid.addFocusListener(this);
+        pname.addFocusListener(this);
+        qua.addFocusListener(this);
+        price.addFocusListener(this);
+        ptype.addFocusListener(this);
+
+        dtm=new DefaultTableModel();
+        database = new JTable(dtm) {
+            public boolean isCellEditable(int row, int colheads) {
+                return false;
+            }
+        };
+        database.setBounds(250, 200, 500, 250);
+        js = new JScrollPane(database);
+        js.setBounds(250, 200, 500, 250);
+        c.add(js);
+        database.setVisible(false);
+        js.setVisible(false);
+        JTableHeader th = database.getTableHeader();
+        database.setBackground(Color.yellow);
+        th.setBackground(Color.cyan);
+        database.setRowSelectionAllowed(true);
+        database.setColumnSelectionAllowed(true);
+        database.setSelectionBackground(Color.ORANGE);
+        dtm.addColumn("ID");
+        dtm.addColumn("NAME");
+        dtm.addColumn("TYPE");
+        dtm.addColumn("Quantity");
+        dtm.addColumn("PRICE");
+        
+
+        ab.setBackground(Color.lightGray);
+        ub.setBackground(Color.lightGray);
+        db.setBackground(Color.lightGray);
+        sb.setBackground(Color.lightGray);
+        hm.setBackground(Color.green);
+        addB.setBackground(Color.lightGray);
+        updB.setBackground(Color.lightGray);
+        delB.setBackground(Color.lightGray);
+        searchB.setBackground(Color.lightGray);
         // setBackground(Color.magenta);
         setVisible(true);
 
@@ -121,8 +183,84 @@ class Homepage extends Frame implements ActionListener {
             psa = con.prepareStatement("insert into Medical values(?,?,?,?,?)");
             psu = con.prepareStatement("update Medical set qty=? where id=?");
             psd = con.prepareStatement("delete from Medical where id=?");
+
         } catch (Exception e) {
             System.out.println("Error Occurs" + e);
+        }
+    }
+
+    public void focusGained(FocusEvent e) {
+        if (e.getSource() == ab) {
+            ab.setBackground(Color.green);
+        }
+        if (e.getSource() == db) {
+            db.setBackground(Color.green);
+        }
+        if (e.getSource() == sb) {
+            sb.setBackground(Color.green);
+        }
+        if (e.getSource() == hm) {
+            hm.setBackground(Color.green);
+        }
+        if (e.getSource() == ub) {
+            ub.setBackground(Color.green);
+        }
+        if (e.getSource() == addB) {
+            addB.setBackground(Color.green);
+        }
+        if (e.getSource() == updB) {
+            updB.setBackground(Color.green);
+        }
+        if (e.getSource() == searchB) {
+            searchB.setBackground(Color.green);
+        }
+        if (e.getSource() == delB) {
+            delB.setBackground(Color.green);
+        }
+        if (e.getSource() == pid) {
+            pid.setText("");
+        }
+        if (e.getSource() == pname) {
+            pname.setText("");
+        }
+        if (e.getSource() == qua) {
+            qua.setText("");
+        }
+        if (e.getSource() == price) {
+            price.setText("");
+        }
+        if (e.getSource() == ptype) {
+            ptype.setText("");
+        }
+    }
+
+    public void focusLost(FocusEvent e) {
+        if (e.getSource() == ab) {
+            ab.setBackground(Color.lightGray);
+        }
+        if (e.getSource() == db) {
+            db.setBackground(Color.lightGray);
+        }
+        if (e.getSource() == sb) {
+            sb.setBackground(Color.lightGray);
+        }
+        if (e.getSource() == hm) {
+            hm.setBackground(Color.lightGray);
+        }
+        if (e.getSource() == ub) {
+            ub.setBackground(Color.lightGray);
+        }
+        if (e.getSource() == addB) {
+            addB.setBackground(Color.lightGray);
+        }
+        if (e.getSource() == updB) {
+            updB.setBackground(Color.lightGray);
+        }
+        if (e.getSource() == searchB) {
+            searchB.setBackground(Color.lightGray);
+        }
+        if (e.getSource() == delB) {
+            delB.setBackground(Color.lightGray);
         }
     }
 
@@ -130,55 +268,6 @@ class Homepage extends Frame implements ActionListener {
         if (ae.getSource() == sb) {
             search.setVisible(true);
             searchB.setVisible(true);
-            result.setVisible(true);
-            id.setVisible(false);
-            pid.setVisible(false);
-            name.setVisible(false);
-            pname.setVisible(false);
-            q.setVisible(false);
-            qua.setVisible(false);
-            pri.setVisible(false);
-            price.setVisible(false);
-            type.setVisible(false);
-            ptype.setVisible(false);
-            addB.setVisible(false);
-            delB.setVisible(false);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = st.executeQuery("select * from Medical");
-                while (res.next()) {
-                    result.setText(res.getInt(1) + "  " + res.getString(2) + "  " + res.getInt(3) + "  " + res.getInt(4)
-                            + "  " + res.getString(5));
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        } else if (ae.getSource() == ab) {
-            try {
-                search.setVisible(false);
-                searchB.setVisible(false);
-                result.setVisible(false);
-                id.setVisible(true);
-                pid.setVisible(true);
-                name.setVisible(true);
-
-                pname.setVisible(true);
-                q.setVisible(true);
-                qua.setVisible(true);
-                pri.setVisible(true);
-                price.setVisible(true);
-                type.setVisible(true);
-                ptype.setVisible(true);
-                addB.setVisible(true);
-                delB.setVisible(false);
-
-            } catch (Exception e) {
-                System.out.println("Error occures  : " + e);
-            }
-        } else if (ae.getSource() == hm) {
-            search.setVisible(true);
-            searchB.setVisible(true);
-            result.setVisible(false);
             id.setVisible(false);
             pid.setVisible(false);
             name.setVisible(false);
@@ -192,10 +281,73 @@ class Homepage extends Frame implements ActionListener {
             addB.setVisible(false);
             delB.setVisible(false);
             updB.setVisible(false);
+            msg.setVisible(true);
+            database.setVisible(true);
+            js.setVisible(true);
+             try {
+             Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");  
+             Statement st = con.createStatement();
+             res = st.executeQuery("select * from Medical");
+             database.removeAll();
+             while(res.next()){
+                
+               String name=res.getString(1);
+               int idp=res.getInt(2);
+               String tp=res.getString(3);
+               int qty=res.getInt(4);
+               int pricep=res.getInt(5);
+                dtm.addRow(new Object[]{name,idp,tp,qty,pricep});
+               
+             }
+             JOptionPane.showMessageDialog(null,"Data Retrived Successfully");
+             } catch (Exception e) {
+             System.out.println(e);
+             }
+        } else if (ae.getSource() == ab) {
+            try {
+                search.setVisible(false);
+                searchB.setVisible(false);
+                id.setVisible(true);
+                pid.setVisible(true);
+                name.setVisible(true);
+                pname.setVisible(true);
+                q.setVisible(true);
+                qua.setVisible(true);
+                pri.setVisible(true);
+                price.setVisible(true);
+                type.setVisible(true);
+                ptype.setVisible(true);
+                addB.setVisible(true);
+                delB.setVisible(false);
+                updB.setVisible(false);
+                database.setVisible(false);
+                msg.setText(" ");
+                js.setVisible(false);
+            } catch (Exception e) {
+                System.out.println("Error occures  : " + e);
+            }
+        } else if (ae.getSource() == hm) {
+            search.setVisible(true);
+            searchB.setVisible(true);
+            id.setVisible(false);
+            pid.setVisible(false);
+            name.setVisible(false);
+            pname.setVisible(false);
+            q.setVisible(false);
+            qua.setVisible(false);
+            pri.setVisible(false);
+            price.setVisible(false);
+            type.setVisible(false);
+            ptype.setVisible(false);
+            addB.setVisible(false);
+            delB.setVisible(false);
+            updB.setVisible(false);
+            database.setVisible(false);
+            js.setVisible(false);
+            msg.setText(" ");
         } else if (ae.getSource() == db) {
             search.setVisible(false);
             searchB.setVisible(false);
-            result.setVisible(false);
             id.setVisible(true);
             pid.setVisible(true);
             name.setVisible(false);
@@ -208,10 +360,13 @@ class Homepage extends Frame implements ActionListener {
             ptype.setVisible(false);
             addB.setVisible(false);
             delB.setVisible(true);
+            updB.setVisible(false);
+            msg.setText(" ");
+            database.setVisible(false);
+            js.setVisible(false);
         } else if (ae.getSource() == ub) {
             search.setVisible(false);
             searchB.setVisible(false);
-            result.setVisible(false);
             id.setVisible(true);
             pid.setVisible(true);
             name.setVisible(false);
@@ -225,6 +380,9 @@ class Homepage extends Frame implements ActionListener {
             addB.setVisible(false);
             delB.setVisible(false);
             updB.setVisible(true);
+            database.setVisible(false);
+            msg.setText(" ");
+            js.setVisible(false);
 
         } else if (ae.getSource() == addB) {
             int id_no = Integer.parseInt(pid.getText());
@@ -233,16 +391,17 @@ class Homepage extends Frame implements ActionListener {
             int amt = Integer.parseInt(price.getText());
             String p_type = ptype.getText();
             try {
-                psa.setInt(1, id_no);
-                psa.setString(2, p_name);
-                psa.setInt(3, quant);
-                psa.setInt(4, amt);
-                psa.setString(5, p_type);
+                psa.setInt(2, id_no);
+                psa.setString(1, p_name);
+                psa.setInt(4, quant);
+                psa.setInt(5, amt);
+                psa.setString(3, p_type);
                 psa.executeUpdate();
+                msg.setVisible(true);
+                JOptionPane.showMessageDialog(null,"Product Added Successfully");
             } catch (Exception e) {
                 System.out.println(e);
             }
-
         } else if (ae.getSource() == updB) {
             try {
                 int amt = Integer.parseInt(qua.getText());
@@ -250,6 +409,8 @@ class Homepage extends Frame implements ActionListener {
                 int id_no = Integer.parseInt(pid.getText());
                 psu.setInt(2, id_no);
                 psu.executeUpdate();
+                msg.setVisible(true);
+                msg.setText("Row Updated Successfully");
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -258,9 +419,25 @@ class Homepage extends Frame implements ActionListener {
                 int id_no = Integer.parseInt(pid.getText());
                 psd.setInt(1, id_no);
                 psd.executeUpdate();
+                msg.setVisible(true);
+                msg.setText("Row Deleted Successfully");
             } catch (Exception e) {
                 System.out.println(e);
             }
+        } else if (ae.getSource() == searchB) {
+            // int i2=Integer.parseInt(search.getText());
+            String name_p = search.getText();
+            // String type_p=search.getText();
+            try {
+                // pss.setInt(1, i2);
+                // pss.setString(1, type_p);
+                pss.setString(1, name_p);
+                res1 = pss.executeQuery();
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
         }
     }
 
