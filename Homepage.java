@@ -11,9 +11,9 @@ import oracle.jdbc.driver.OracleSQLException;
 
 class Homepage extends JFrame implements ActionListener, FocusListener {
     JTextField pid, pname, qua, price, ptype, searchField;
-    JLabel id, name, q, pri, type,searchdata;
-    SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
-    JButton ab, db, ub, hm, addB, delB, updB,sell,sellp,genBill;
+    JLabel id, name, q, pri, type, searchdata;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    JButton ab, db, ub, hm, addB, delB, updB, sell, sellp, genBill;
     JTable database;
     Container c;
     static PreparedStatement psa;
@@ -23,13 +23,13 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
     static PreparedStatement pssell;
     static PreparedStatement psbill;
     static Connection con;
-     ResultSet res, res1;
+    ResultSet res, res1;
     static DefaultTableModel dtm;
     JScrollPane js;
 
     Homepage() {
         setSize(800, 800);
-        setLocation(500,180);
+        setLocation(500, 180);
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         c = getContentPane();
@@ -37,14 +37,14 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         searchField.setBounds(350, 50, 250, 30);
         c.add(searchField);
         searchdata = new JLabel("Search");
-        searchdata.setBounds(260,50,80,30);
+        searchdata.setBounds(260, 50, 80, 30);
         c.add(searchdata);
-        
+
         ab = new JButton("ADD");
         db = new JButton("DELETE");
         ub = new JButton("UPDATE");
         hm = new JButton("SHOW");
-        sell=new JButton("SELL");
+        sell = new JButton("SELL");
         hm.setBounds(50, 200, 100, 30);
         ab.setBounds(50, 250, 100, 30);
         db.setBounds(50, 300, 100, 30);
@@ -67,7 +67,8 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         hm.addFocusListener(this);
         sell.addFocusListener(this);
         sell.setBackground(Color.lightGray);
-       
+
+        c.setBackground(Color.ORANGE);
 
         id = new JLabel("Product ID :");
         pid = new JTextField(5);
@@ -153,7 +154,7 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         sellp.addFocusListener(this);
         genBill.addFocusListener(this);
 
-        dtm=new DefaultTableModel();
+        dtm = new DefaultTableModel();
         database = new JTable(dtm) {
             public boolean isCellEditable(int row, int colheads) {
                 return false;
@@ -177,54 +178,55 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         dtm.addColumn("Quantity");
         dtm.addColumn("PRICE(per piece)");
 
-         try {
+        try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-             Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");  
-             Statement st = con.createStatement();
-             res = st.executeQuery("select * from Medical");
-             dtm.setRowCount(0);
-             while(res.next()){
-               String name=res.getString(1);
-               int idp=res.getInt(2);
-               String tp=res.getString(3);
-               int qty=res.getInt(4);
-               int pricep=res.getInt(5);
-                dtm.addRow(new Object[]{idp,name,tp,qty,pricep});
-             }
-             }catch(ClassNotFoundException e) {
-                
-             }
-             catch(SQLException e ){
-                System.out.println(e.getMessage());
-                // JOptionPane.showConfirmDialog(null, "Product ID Already Exist");
-             } 
+            Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");
+            Statement st = con.createStatement();
+            res = st.executeQuery("select * from Medical");
+            dtm.setRowCount(0);
+            while (res.next()) {
+                String name = res.getString(1);
+                int idp = res.getInt(2);
+                String tp = res.getString(3);
+                int qty = res.getInt(4);
+                int pricep = res.getInt(5);
+                dtm.addRow(new Object[] { idp, name, tp, qty, pricep });
+            }
+        } catch (ClassNotFoundException e) {
 
-        //Search Functionality
-        TableRowSorter sorter=new TableRowSorter<>(dtm);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            // JOptionPane.showConfirmDialog(null, "Product ID Already Exist");
+        }
+
+        // Search Functionality
+        TableRowSorter sorter = new TableRowSorter<>(dtm);
         database.setRowSorter(sorter);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e){
+            public void insertUpdate(DocumentEvent e) {
                 search(searchField.getText());
             }
-             @Override
-            public void removeUpdate(DocumentEvent e){
-                 search(searchField.getText());
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search(searchField.getText());
             }
-             @Override
-            public void changedUpdate(DocumentEvent e){
-                 search(searchField.getText());
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                search(searchField.getText());
             }
-            public void search(String str){
-                if(str.length()==0){
+
+            public void search(String str) {
+                if (str.length() == 0) {
                     sorter.setRowFilter(null);
-                }
-                else{
+                } else {
                     sorter.setRowFilter(RowFilter.regexFilter(str));
                 }
-               }
-            
-        });  
+            }
+
+        });
 
         ab.setBackground(Color.lightGray);
         ub.setBackground(Color.lightGray);
@@ -289,13 +291,13 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         if (e.getSource() == ptype) {
             ptype.setText("");
         }
-         if (e.getSource() == sell) {
+        if (e.getSource() == sell) {
             sell.setBackground(Color.green);
         }
-         if (e.getSource() == sellp) {
+        if (e.getSource() == sellp) {
             sellp.setBackground(Color.green);
         }
-         if (e.getSource() == genBill) {
+        if (e.getSource() == genBill) {
             genBill.setBackground(Color.green);
         }
     }
@@ -328,13 +330,13 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         if (e.getSource() == sellp) {
             sellp.setBackground(Color.lightGray);
         }
-         if (e.getSource() == genBill) {
+        if (e.getSource() == genBill) {
             genBill.setBackground(Color.green);
         }
     }
 
-    public void actionPerformed(ActionEvent ae){
-       if (ae.getSource() == ab) {
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == ab) {
             try {
                 searchField.setVisible(false);
                 searchdata.setVisible(false);
@@ -376,22 +378,23 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
             sellp.setVisible(false);
             database.setVisible(true);
             js.setVisible(true);
-             try {
-             Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");  
-             Statement st = con.createStatement();
-             res = st.executeQuery("select * from Medical");
-             dtm.setRowCount(0);
-             while(res.next()){
-               String name=res.getString(1);
-               int idp=res.getInt(2);
-               String tp=res.getString(3);
-               int qty=res.getInt(4);
-               int pricep=res.getInt(5);
-                dtm.addRow(new Object[]{idp,name,tp,qty,pricep});
-             }
-             } catch(Exception e){
+            try {
+                Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system",
+                        "manager");
+                Statement st = con.createStatement();
+                res = st.executeQuery("select * from Medical");
+                dtm.setRowCount(0);
+                while (res.next()) {
+                    String name = res.getString(1);
+                    int idp = res.getInt(2);
+                    String tp = res.getString(3);
+                    int qty = res.getInt(4);
+                    int pricep = res.getInt(5);
+                    dtm.addRow(new Object[] { idp, name, tp, qty, pricep });
+                }
+            } catch (Exception e) {
                 System.out.println(e);
-             } 
+            }
         } else if (ae.getSource() == db) {
             searchField.setVisible(false);
             searchdata.setVisible(false);
@@ -437,36 +440,36 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
             int quant = Integer.parseInt(qua.getText());
             int amt = Integer.parseInt(price.getText());
             String p_type = ptype.getText();
-            
-            try {if(quant!=0){
-                psa.setInt(2, id_no);
-                psa.setString(1, p_name);
-                psa.setInt(4, quant);
-                psa.setInt(5, amt);
-                psa.setString(3, p_type);
-                psa.executeUpdate();
-                JOptionPane.showMessageDialog(null,"Product Added Successfully");
-            }else{
-                JOptionPane.showMessageDialog(null,"Invalid Quantity ...");
-            }
-            }
-             catch(SQLException e ){
+
+            try {
+                if (quant != 0) {
+                    psa.setInt(2, id_no);
+                    psa.setString(1, p_name);
+                    psa.setInt(4, quant);
+                    psa.setInt(5, amt);
+                    psa.setString(3, p_type);
+                    psa.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Product Added Successfully");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid Quantity ...");
+                }
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
-                 JOptionPane.showMessageDialog(null, "Product Already Exists..");
-             } 
+                JOptionPane.showMessageDialog(null, "Product Already Exists..");
+            }
         } else if (ae.getSource() == updB) {
-            
-            try { 
-                int quant=Integer.parseInt(qua.getText());
+
+            try {
+                int quant = Integer.parseInt(qua.getText());
                 int id_no = Integer.parseInt(pid.getText());
-                int pr=Integer.parseInt(price.getText());
-                if(quant!=0){
-                psu.setInt(3, id_no);
-                psu.setInt(1, quant);
-                psu.setInt(2, pr);
-                psu.executeUpdate();
-                JOptionPane.showMessageDialog(null,"Product Updated Successfully");
-                }else{
+                int pr = Integer.parseInt(price.getText());
+                if (quant != 0) {
+                    psu.setInt(3, id_no);
+                    psu.setInt(1, quant);
+                    psu.setInt(2, pr);
+                    psu.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Product Updated Successfully");
+                } else {
                     JOptionPane.showMessageDialog(null, "Invalid Quantity..");
                 }
 
@@ -476,24 +479,23 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
         } else if (ae.getSource() == delB) {
             try {
                 int id_no = Integer.parseInt(pid.getText());
-               
-                 Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");  
-                Statement st=con.createStatement();
-                ResultSet r=st.executeQuery("select * from Medical where id="+id_no);
-                if(!r.next()){
+
+                Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system","manager");
+                Statement st = con.createStatement();
+                ResultSet r = st.executeQuery("select * from Medical where id=" + id_no);
+                if (!r.next()) {
                     JOptionPane.showMessageDialog(null, "Product Id Not Found..");
-                }else{
-                     psd.setInt(1, id_no);
+                } else {
+                    psd.setInt(1, id_no);
                     psd.executeUpdate();
                     JOptionPane.showMessageDialog(null, "Product Deleted Successfully..");
                 }
-               // JOptionPane.showMessageDialog(null,"Product Deleted Successfully");
+                // JOptionPane.showMessageDialog(null,"Product Deleted Successfully");
             } catch (SQLException e) {
                 System.out.println(e);
             }
-        }
-        else if(ae.getSource()==sell){
-             searchField.setVisible(false);
+        } else if (ae.getSource() == sell) {
+            searchField.setVisible(false);
             searchdata.setVisible(false);
             id.setVisible(true);
             pid.setVisible(true);
@@ -511,50 +513,53 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
             database.setVisible(false);
             js.setVisible(false);
             sellp.setVisible(true);
-            
-        } else if(ae.getSource()==sellp){
-            try{
-         Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");  
-         Statement st=con.createStatement();
-         int id_no=Integer.parseInt(pid.getText());
-         int price_amt=Integer.parseInt(qua.getText());
-         ResultSet r=st.executeQuery("select * from Medical where id="+id_no);
-         if(!r.next()){
-            JOptionPane.showMessageDialog(null,"Product Not Available...");
-         }else{
-            String pn=r.getString(1);
-            int q=r.getInt(4);
-            int p_price=r.getInt(5);
-            int updQuant=(q-price_amt);
-            pssell.setInt(1,updQuant);
-            pssell.setInt(2, id_no);
-            pssell.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Product selled.");
-            genBill.setVisible(true);
-            st.executeQuery("delete from Medical where qty=0");
-         }
-            }catch(Exception e){
+
+        } else if (ae.getSource() == sellp) {
+            try {
+                Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system",
+                        "manager");
+                Statement st = con.createStatement();
+                int id_no = Integer.parseInt(pid.getText());
+                int price_amt = Integer.parseInt(qua.getText());
+                ResultSet r = st.executeQuery("select * from Medical where id=" + id_no);
+                if (!r.next()) {
+                    JOptionPane.showMessageDialog(null, "Product Not Available...");
+                } else {
+                    String pn = r.getString(1);
+                    int q = r.getInt(4);
+                    int p_price = r.getInt(5);
+                    int updQuant = (q - price_amt);
+                    pssell.setInt(1, updQuant);
+                    pssell.setInt(2, id_no);
+                    pssell.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Product selled.");
+                    genBill.setVisible(true);
+                    st.executeQuery("delete from Medical where qty=0");
+                }
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        } else if(ae.getSource()==genBill){
+        } else if (ae.getSource() == genBill) {
             try {
-                Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "manager");  
-         Statement st=con.createStatement();
-         int id_no=Integer.parseInt(pid.getText());
-         ResultSet r=st.executeQuery("select * from Medical where id="+id_no);
+                Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system",
+                        "manager");
+                Statement st = con.createStatement();
+                int id_no = Integer.parseInt(pid.getText());
+                ResultSet r = st.executeQuery("select * from Medical where id=" + id_no);
                 if (!r.next()) {
-                   
+
                     JOptionPane.showMessageDialog(null, "Error While Generating Bill");
-                } else{
-                     String name=r.getString(1);
-                    int price_per=r.getInt(5);
-                    int quant=Integer.parseInt(qua.getText());
-                    int TotalBill=quant*price_per;
-                    String date=dateFormat.format(new Date());
-                    
-                    JOptionPane.showMessageDialog(null, "Date: "+date+"\nProduct Name : "+name+"\nPrice/piece : "+price_per+"\nQuantity : "+quant+"\nTotal Bill : "+TotalBill);
+                } else {
+                    String name = r.getString(1);
+                    int price_per = r.getInt(5);
+                    int quant = Integer.parseInt(qua.getText());
+                    int TotalBill = quant * price_per;
+                    String date = dateFormat.format(new Date());
+
+                    JOptionPane.showMessageDialog(null, "Date: " + date + "\nProduct Name : " + name
+                            + "\nPrice/piece : " + price_per + "\nQuantity : " + quant + "\nTotal Bill : " + TotalBill);
                     psbill.setString(1, date);
-                    psbill.setInt(2,id_no);
+                    psbill.setInt(2, id_no);
                     psbill.setString(3, name);
                     psbill.setInt(4, price_per);
                     psbill.setInt(5, quant);
@@ -563,7 +568,7 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
                     JOptionPane.showMessageDialog(null, "Bill Info Stored in Bills Table");
                 }
             } catch (Exception e) {
-               System.out.println(e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
     }
