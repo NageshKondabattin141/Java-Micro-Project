@@ -7,7 +7,6 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import java.util.Date;
 import java.util.Vector;
-
 import oracle.jdbc.driver.OracleSQLException;
 
 class Homepage extends JFrame implements ActionListener, FocusListener {
@@ -485,17 +484,17 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
                 ResultSet r = st.executeQuery("select * from Medical where id=" + id_no);
                 if (!r.next()) {
                     JOptionPane.showMessageDialog(null, "Product ID " + id_no + " Not Found..");
-                } else{
-                if (quant != 0) {
-                    psu.setInt(3, id_no);
-                    psu.setInt(1, quant);
-                    psu.setInt(2, pr);
-                    psu.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "Product ID " + id_no + " is Updated Successfully");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Invalid Quantity..");
+                    if (quant != 0) {
+                        psu.setInt(3, id_no);
+                        psu.setInt(1, quant);
+                        psu.setInt(2, pr);
+                        psu.executeUpdate();
+                        JOptionPane.showMessageDialog(null, "Product ID " + id_no + " is Updated Successfully");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid Quantity..");
+                    }
                 }
-            }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "All Fields Must be Filled..");
             } catch (SQLException e) {
@@ -551,7 +550,7 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
                 int qtys = Integer.parseInt(qua.getText());
                 ResultSet r = st.executeQuery("select * from Medical where id=" + id_no);
                 if (!r.next()) {
-                    JOptionPane.showMessageDialog(null, "Product ID "+id_no+" is Not Available...");
+                    JOptionPane.showMessageDialog(null, "Product ID " + id_no + " is Not Available...");
                 } else {
 
                     String pn = r.getString(1);
@@ -600,17 +599,17 @@ class Homepage extends JFrame implements ActionListener, FocusListener {
                         psbill.executeUpdate();
 
                         str = str + "\n\nDate: " + date + "\nProduct Name : " + name
-                                + "\nPrice/piece : " + price_per + "\nQuantity : " + selledQty.get(i) + "\nTotal Bill : "
+                                + "\nPrice/piece : " + price_per + "\nQuantity : " + selledQty.get(i)
+                                + "\nTotal Bill : "
                                 + TotalBill;
                         tb = tb + TotalBill;
                     }
                 }
-                 selledId.clear();
-                 selledQty.clear();
+                selledId.clear();
+                selledQty.clear();
                 JOptionPane.showMessageDialog(null, str + "\n\nOverAll Total Bill = " + tb);
                 JOptionPane.showMessageDialog(null, "Bill Info Stored in Bills Table");
-            } 
-             catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
